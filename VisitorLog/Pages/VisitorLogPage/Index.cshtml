@@ -1,84 +1,200 @@
 ﻿@page
 @model VisitorLog.IndexModel
-
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<form method="post">
+    <table class="table-condensed table-bordered table-striped" cellpadding="5" style="width:100%">
+        <!-- Table Header -->
+        <thead class="text-nowrap" style="text-align:center;">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Visits[0].VisitDt)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Visits[0].Location)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Visits[0].AttendeeName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Visits[0].AttendeeGroup)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Visits[0].HelperName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Visits[0].HelperGroup)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Visits[0].Task)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Visits[0].Resolution)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Visits[0].Tags)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <!-- Table Body -->
+        <tbody>
+            <!-- Empty row for adding new entries -->
+            <tr>
+                <td>
+                    <input asp-for="Visit.VisitDt" class="form-control" value="00/00/0000" />
+                </td>
+                <td>
+                    <input asp-for="Visit.Location" class="form-control" />
+                </td>
+                <td>
+                    <input asp-for="Visit.AttendeeName" class="form-control" />
+                </td>
+                <td>
+                    <input asp-for="Visit.AttendeeGroup" class="form-control" />
+                </td>
+                <td>
+                    <input asp-for="Visit.HelperName" class="form-control" />
+                </td>
+                <td>
+                    <input asp-for="Visit.HelperGroup" class="form-control" />
+                </td>
+                <td>
+                    <input asp-for="Visit.Task" class="form-control" style="height:auto;" />
+                </td>
+                <td>
+                    <input asp-for="Visit.Resolution" class="form-control" style="height:auto;" />
+                </td>
+                <td>
+                    <input asp-for="Visit.Tags" class="form-control" style="height:auto;" />
+                </td>
+                <td align="center" valign="middle" style="white-space:nowrap">
+                    <button type="submit" asp-page-handler="Insert" value="Add" class="btn btn-sm btn-success" style="padding:3px 7px 3px 7px;" data-toggle="tooltip" title="Add">
+                        <i class="fa fa-plus" aria-hidden="true" style="color: #ffffff"></i>
+                    </button>
+                </td>
+            </tr>
+            <!-- Table Entries -->
+            @foreach (var item in Model.Visits)
+            {
+                var WhenDate = @item.VisitDt.ToString("yyyy-MM-dd"); /* Converts date to a string in a format that allows the date picker to be viewed */
+                <tr>
+                    <td hidden>
+                        <div id="txtId">@Html.DisplayFor(modelItem => item.Id)</div>
+                        <input asp-for="@Model.Update.Id" value="@Html.DisplayFor(modelItem => item.Id)" />
+                    </td>
+                    <td>
+                        <div id="txtWhen1">@Html.DisplayFor(modelItem => item.VisitDt)</div>
+                        <input asp-for="@Model.Update.VisitDt" class="form-control" type="date" id="txtWhen2" value="@WhenDate" hidden />
+                    </td>
+                    <td>
+                        <div id="txtLocation1">@Html.DisplayFor(modelItem => item.Location)</div>
+                        <input asp-for="@Model.Update.Location" class="form-control" id="txtLocation2" value="@item.Location" hidden />
+                    </td>
+                    <td>
+                        <div id="txtNeededHelpName1">@Html.DisplayFor(modelItem => item.AttendeeName)</div>
+                        <input asp-for="@Model.Update.AttendeeName" class="form-control" id="txtNeededHelpName2" value="@item.AttendeeName" hidden />
+                    </td>
+                    <td>
+                        <div id="txtNeededHelpName1">@Html.DisplayFor(modelItem => item.AttendeeGroup)</div>
+                        <input asp-for="@Model.Update.AttendeeGroup" class="form-control" id="txtNeededHelpName2" value="@item.AttendeeGroup" hidden />
+                    </td>
+                    <td>
+                        <div id="txtHelperName1">@Html.DisplayFor(modelItem => item.HelperName)</div>
+                        <input asp-for="@Model.Update.HelperName" class="form-control" id="txtHelperName2" value="@item.HelperName" hidden />
+                    </td>
+                    <td>
+                        <div id="txtHelperName1">@Html.DisplayFor(modelItem => item.HelperGroup)</div>
+                        <input asp-for="@Model.Update.HelperGroup" class="form-control" id="txtHelperName2" value="@item.HelperGroup" hidden />
+                    </td>
+                    <td>
+                        <div id="txtSummary1">@Html.DisplayFor(modelItem => item.Task)</div>
+                        <input asp-for="@Model.Update.Task" class="form-control" id="txtSummary2" value="@item.Task" hidden />
+                    </td>
+                    <td>
+                        <div id="txtResolution1">@Html.DisplayFor(modelItem => item.Resolution)</div>
+                        <input asp-for="@Model.Update.Resolution" class="form-control" id="txtResolution2" value="@item.Resolution" hidden />
+                    </td>
+                    <td>
+                        <div id="txtTags1">@Html.DisplayFor(modelItem => item.Tags)</div>
+                        <input asp-for="@Model.Update.Tags" class="form-control" id="txtTags2" value="@item.Tags" hidden />
+                    </td>
+                    <!-- These are your row buttons. Edit and Cancel buttons use JavaScript, Update and Delete buttons use onpost methods -->
+                    <td align="center" valign="middle" style="white-space:nowrap">
+                        <button type="button" class="btn btn-primary btn-sm" id="Editbtn" onclick="Edit()" style="padding:3px 7px 3px 7px;" data-toggle="tooltip" title="Edit">
+                            <i class="fa fa-pen" aria-hidden="true" style="color: #ffffff"></i>
+                        </button>
+                        <button type="submit" asp-page-handler="Update" asp-route-Id="@item.Id" class="btn btn-sm btn-success" id="Updatebtn" style="padding:3px 7px 3px 7px;" data-toggle="tooltip" title="Update" hidden>
+                            <i class="fa fa-save" aria-hidden="true" style="color: #ffffff"></i>
+                        </button>
+                        <button type="button" class="btn btn-dark btn-sm" id="Cancelbtn" onclick="Cancel()" style="padding:3px 7px 3px 7px;" data-toggle="tooltip" title="Cancel" hidden>
+                            <i class="fa fa-times" aria-hidden="true" style="color: #ffffff"></i>
+                        </button>
+                        <button type="submit" asp-page-handler="Delete" asp-route-Id="@item.Id" class="btn btn-danger btn-sm" id="Deletebtn" style="padding:3px 7px 3px 7px;" data-toggle="tooltip" title="Delete">
+                            <i class="fa fa-trash-alt" aria-hidden="true" style="color: #ffffff"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Visit[0].VisitDt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Visit[0].Location)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Visit[0].AttendeeName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Visit[0].AttendeeGroup)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Visit[0].HelperName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Visit[0].HelperGroup)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Visit[0].Task)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Visit[0].Resolution)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Visit[0].Tags)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Visit) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.VisitDt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Location)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AttendeeName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AttendeeGroup)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HelperName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HelperGroup)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Task)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Resolution)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tags)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+@* JavaScript for the Edit and Cancel buttons *@
+<script language="javascript" type="text/javascript">
+
+    function Edit() {
+        // hide/show proper buttons
+        document.getElementById('Updatebtn').hidden = false;
+        document.getElementById('Cancelbtn').hidden = false;
+        document.getElementById('Editbtn').hidden = true;
+        document.getElementById('Deletebtn').hidden = true;
+
+        // hide text fields and show input fields
+        document.getElementById('txtWhen1').hidden = true;
+        document.getElementById('txtWhen2').hidden = false;
+        document.getElementById('txtLocation1').hidden = true;
+        document.getElementById('txtLocation2').hidden = false;
+        document.getElementById('txtNeededHelpName1').hidden = true;
+        document.getElementById('txtNeededHelpName2').hidden = false;
+        document.getElementById('txtHelperName1').hidden = true;
+        document.getElementById('txtHelperName2').hidden = false;
+        document.getElementById('txtSummary1').hidden = true;
+        document.getElementById('txtSummary2').hidden = false;
+        document.getElementById('txtResolution1').hidden = true;
+        document.getElementById('txtResolution2').hidden = false;
+        document.getElementById('txtTags1').hidden = true;
+        document.getElementById('txtTags2').hidden = false;
+    }
+
+    function Cancel() {
+        // hide/show proper buttons
+        document.getElementById('Updatebtn').hidden = true;
+        document.getElementById('Cancelbtn').hidden = true;
+        document.getElementById('Editbtn').hidden = false;
+        document.getElementById('Deletebtn').hidden = false;
+
+        // hide input fields and show text fields
+        document.getElementById('txtWhen1').hidden = false;
+        document.getElementById('txtWhen2').hidden = true;
+        document.getElementById('txtLocation1').hidden = false;
+        document.getElementById('txtLocation2').hidden = true;
+        document.getElementById('txtNeededHelpName1').hidden = false;
+        document.getElementById('txtNeededHelpName2').hidden = true;
+        document.getElementById('txtHelperName1').hidden = false;
+        document.getElementById('txtHelperName2').hidden = true;
+        document.getElementById('txtSummary1').hidden = false;
+        document.getElementById('txtSummary2').hidden = true;
+        document.getElementById('txtResolution1').hidden = false;
+        document.getElementById('txtResolution2').hidden = true;
+        document.getElementById('txtTags1').hidden = false;
+        document.getElementById('txtTags2').hidden = true;
+    }
+
+    function Delete() {
+        // add function that pulls up are you sure you want to delete? on delete button click
+    }
+
+</script>
